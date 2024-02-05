@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended : true}));
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-    res.render("index");
+    res.render("index", {pep: process.env.PORT});
 });
 
 app.listen(process.env.PORT,4000, (req,res) =>{
