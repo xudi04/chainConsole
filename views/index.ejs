@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+        }
+        body {
+            height: 100vh;
+            background-color: rgba(96, 8, 151, 0.829);
+        }
+
+        hr {
+            border-width: 2px;
+            border-color: wheat;
+        }
+
+        h1 {
+            padding: 20px 0px 0px 0px;
+            color: white;
+        }
+
+        p { padding: 5px 2px; }
+
+
+        #body {
+            background-color: rgb(96, 8, 151);
+            color: aliceblue;
+            width: 100%;
+            max-height: 87vh;
+            min-height: 50vh;
+            overflow: scroll;
+        } ::-webkit-scrollbar {
+            display: none;
+        }
+
+        #adder {
+            width: 100%;
+            max-height: 12vh;
+            min-height: 10vh;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+        }
+
+        #theData {
+            width: 70%;
+            height: 45px;
+            font-size: 20px;
+            text-align: center;
+            outline: none;
+            border: none;
+            border-bottom: 1.5px solid black;
+            box-shadow: 2px 0px 3px 1px white,
+                       1px 1px 1px wheat inset;
+            border-radius: 15px;
+            background-color: rgb(96, 8, 151);
+            color: aliceblue;
+        }
+
+        #send {
+            width:20%;
+            height: 50px;
+            font-size: 25px;
+            outline: none;
+            border: none;
+            border-bottom: 1.5px solid black;
+            box-shadow: 2px 0px 3px 1px white,
+                       1px 1px 1px wheat inset;
+            border-radius: 15px;
+            background-color: aliceblue;
+            color: rgb(96, 8, 151);
+        }
+
+
+        .k {
+            color:yellowgreen;
+            font-size: 20px;
+        }
+
+        .v {
+            color: rgb(250,250,0);
+        }
+ /* 
+  r1 = RGB(255, 191, 96)
+ 
+ */
+        
+    </style>
+    <title>Adder</title>
+</head>
+<body>
+    <div id="body"></div>
+    <div id="adder">
+        <input type="text" id="theData">
+        <button id="send">Send</button>
+    </div>
+
+    <script>
+
+
+
+        function editData(data) {
+            var a = 0;
+
+            // var body = document.body;
+            body.innerHTML="";
+            data.forEach(block => {
+                 a++;
+                
+                var bText = "<h1>Block " + a + " :<hr></h1>";
+                body.innerHTML +=bText;
+                var dText;
+                for (const [key1, value1] of Object.entries(block)) {
+                        // console.log(key1, value1);
+                        if (key1 == "data") {
+                            for (const [key2, value2] of Object.entries(value1)) {
+                                // console.log(key2, value2);
+                                dText = `<p><span class="k"> ${key2}:</span> <span class="v">${value2}</span></p>`;
+
+                            }
+                        } else {
+                                dText = `<p><span class="k"> ${key1}:</span> <span class="v">${value1}</span></p>`;
+                            // console.log(key1);
+                        }
+
+
+                        body.innerHTML +=dText;
+                        
+                }
+
+                body.innerHTML +="<hr/>";
+                body.style.textAlign="center";
+
+            });
+        }
+
+        function getData() {
+            const apiUrl = "http://localhost:4000/blocks";
+
+            // fetch ile GET isteği yapma
+            fetch(apiUrl)
+            .then(response => {
+                // HTTP yanıtını kontrol etme
+                if (!response.ok) {
+                throw new Error("Network response was not ok");
+                }
+                // JSON formatına dönüştürme ve geri döndürme
+                return response.json();
+            })
+            .then(data => {
+                // İşlenmiş JSON verisi
+                var json =  JSON.stringify(data);
+
+                editData(data);
+            
+            })
+            .catch(error => {
+                // Hata durumunda
+                console.error("There was a problem with the fetch operation:", error);
+            }); 
+        }
+
+        setInterval(getData(), 1000*20);
+
+
+        send.addEventListener("click", () => {
+            var getdata = theData.value;
+            
+
+            const postData = {
+                 data: getdata
+            };
+
+            fetch("http://localhost:4000/add", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // JSON verisi gönderilecekse
+                // 'Content-Type': 'application/x-www-form-urlencoded', // Form verisi gönderilecekse
+                // Diğer başlık bilgileri...
+            },
+            body: JSON.stringify(postData), // JSON verisi gönderilecekse
+            // body: new URLSearchParams(postData).toString(), // Form verisi gönderilecekse
+            })
+            .then(response => {
+                if (!response.ok) {
+                throw new Error("Network response was not ok");
+                }
+                return response.json(); // veya response.text() veya diğer uygun metotlar
+            })
+            .then(data => {
+                // console.log("Veri eklendi:", data);
+            })
+            .catch(error => {
+                console.error("Veri eklenirken bir hata oluştu:", error);
+            });
+            theData.value = "";
+
+
+            getData();
+
+        })
+
+       
+    </script>
+</body>
+</html>
