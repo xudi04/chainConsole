@@ -21,6 +21,6 @@ app.get("/", (req, res) => {
     res.render("index", {pep: process.env.PORT});
 });
 
-app.listen(process.env.PORT,4000, (req,res) =>{
+app.listen(4000, (req,res) =>{
     console.log("http://localhost:4000");
 });
