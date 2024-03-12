@@ -67,7 +67,7 @@ function getData() {
         if (chainLen < data.length) {
             setChain(data);
             ok = true;
-            console.log(chainLen, data.length);
+            // console.log(chainLen, data.length);
         } else if(chainLen > data.length) {
             
             JSON.parse(localStorage.getItem(chain)).forEach(b => {
@@ -99,13 +99,13 @@ function setData(data) {
         body: JSON.stringify(postData), 
     })
    .then(response => {
-        console.log(response);
+        // console.log(response);
        if (response.ok) {
             return response.json();
        }
    })
    .then(data1 => {
-       console.log("Veri eklendi:", data);
+    //    console.log("Veri eklendi:", data);
    })
    .catch(error => {
        console.error("Veri eklenirken bir hata oluştu:", error);
@@ -131,7 +131,7 @@ setInterval(() => {
 // getData(); 
 
 
-console.log(body.scrollTop);
+// console.log(body.scrollTop);
 
 send.addEventListener("click",event1);
 document.addEventListener('keydown', event => {
